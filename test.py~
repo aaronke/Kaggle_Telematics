@@ -1,0 +1,5 @@
+import cPickle as pickle
+
+a = 444
+with open('./tttt','wb') as fp:
+    pickle.dump(a,fp)

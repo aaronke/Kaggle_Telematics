@@ -1,0 +1,9 @@
+1, speed & acce % angle
+[trip_time, ave_speed, ave_accelaration, ave_rotation] ave & div
+second, 0 ~ 150 km/hour, km/hour*hour, 0~90
+
+2, divide speed to two parts: High and Low, median of speed, time occupation of driving with the median speed
+
+3, max min normalization, GBRT parameters
+	{'max_features': 0.1, 'subsample': 0.5, 'learning_rate': 0.05, 'max_depth': 5, 'min_samples_leaf': 5}
+
