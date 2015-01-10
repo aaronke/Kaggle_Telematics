@@ -36,16 +36,17 @@ with open(path + '1007','rb') as fp:
 #y = [0]*200 + [1]*1000
 X = []
 y = [0]*200 + [1]*800
-f = 213
+f = 0
 with open(path + files[f], 'rb') as fp:
     X += pickle.load(fp)
 for i in range(1,101):
     with open(path + files[f + i], 'rb') as fp:
         X += pickle.load(fp)[:8]
-X_train = X[:50] + X[250:]
-y_train = y[:50] + y[250:]
-X_test = X[50:250]
-y_test = y[50:250]
+X_train = X[:150] + X[250:]
+y_train = y[:150] + y[250:]
+X_test = X[150:250]
+y_test = y[150:250]
+
 X = np.array(X)
 n_elements = X.shape[0]
 y = np.array(y)
@@ -78,15 +79,13 @@ y_score = clf.predict_proba(X)[:, 1]
 print ROC(y, y_score)
 y_score = clf.predict_proba(X_test)[:, 0]
 print y_score
-print "-----------------\n"
-y_score = clf.predict_proba(X_test)[:, 1]
-print y_score
 print clf.predict(X_test)
+"""
 print clf.classes_
 #y_score = clf.predict_proba(X[:50])[:, 1]
 #print y_score
 #print clf.predict_proba(X)[0][0]
-"""
+
 X = X_train[:150] + X_test[:50]
 predict = clf.predict_proba(X)[:,0]
 predictS = np.sort(predict)
