@@ -4,6 +4,7 @@ from sklearn.ensemble import GradientBoostingClassifier as GBRT
 import numpy as np
 from scipy.io import loadmat
 from sklearn.preprocessing import Imputer
+from sklearn.svm import SVC
 
 path = '/cshome/kzhou3/Data/feature/featureK/'
 feature = loadmat(path + 'feature.mat')
@@ -11,12 +12,12 @@ name = loadmat(path + 'name.mat')
 feature = feature['drivers_features'][:547200]
 name = name['Sort_Names'][0]
 
-k = 811 # choose which driver to classify
+k = 11 # choose which driver to classify
 X = feature[200*(k-1):200*(k)]
-for i in range(1,101):
-    X = np.concatenate((X, feature[(k-1 + i)%2736*200:((k-1 + i)%2736*200 + 8)]))
+for i in range(1,301):
+    X = np.concatenate((X, feature[(k-1 + i)%2736*200:((k-1 + i)%2736*200 + 3)]))
 
-y = np.array([0]*200 + [1]*800)
+y = np.array([0]*200 + [1]*900)
 
 X = Imputer().fit_transform(X)
 
@@ -26,7 +27,8 @@ X_test = X[150:250]
 y_test = y[150:250]
 
 #clf = RandomForest(n_estimators=250, max_features=4, max_depth=None, min_samples_split=1)
-clf = GBRT(n_estimators=250, learning_rate=0.05, max_depth=8, max_features=1.0, min_samples_leaf=17,  random_state=0, subsample=0.5)
+clf = SVC(C=0.0005, kernel='poly', degree=5, gamma=0.0, coef0=0.0, shrinking=True, probability=True)
+#clf = GBRT(n_estimators=250, learning_rate=0.05, max_depth=8, max_features=1.0, min_samples_leaf=17,  random_state=0, subsample=0.5)
 #clf = GBRT(n_estimators=250, learning_rate=0.1, max_depth=4, max_features=0.3, min_samples_leaf=3,  random_state=0, subsample=0.6)
 #clf = Pipeline([("scale", StandardScaler()), ("gbrt", GBRT(n_estimators=250, learning_rate=0.1, max_depth=4, max_features=0.3, min_samples_leaf=3,  random_state=0, subsample=0.6))])
 
@@ -39,6 +41,8 @@ print clf.score(X_test, y_test)
 print clf.score(X_train, y_train)
 y_score = clf.predict_proba(X)[:, 1]
 print ROC(y, y_score)
+print y_score[:50]
 y_score = clf.predict_proba(X_test)[:, 0]
 print y_score
 print clf.predict(X_test)
+print clf.predict(X[:50])
