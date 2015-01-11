@@ -5,6 +5,7 @@ import numpy as np
 from scipy.io import loadmat
 from sklearn.covariance import EmpiricalCovariance
 from sklearn.preprocessing import Imputer
+from sklearn import cross_validation as CV
 
 path = '/cshome/kzhou3/Data/feature/featureK/'
 feature = loadmat(path + 'feature.mat')
@@ -18,7 +19,6 @@ output.write('driver_trip,prob\n')
 start = time.time()
 c = 0
 size = 2736
-size = 55
 for k in range(1,size + 1):
     # Round 1: get top 140 relavent trips
     X_predict = feature[200*(k-1):200*(k)]
@@ -47,7 +47,7 @@ for k in range(1,size + 1):
     clf = GBRT(n_estimators=250, learning_rate=0.05, max_depth=8, max_features=1.0, min_samples_leaf=17, random_state=0, subsample = 0.5)
     clf.fit(X, y)
     scores = clf.predict_proba(X_predict)[:,0]
-    print sum(clf.predict(X_predict))
+    #print sum(clf.predict(X_predict))
     for i in range(1,201):
         output.write(str(name[k - 1]) + '_' + str(i) + ',' + str(scores[i - 1]) + '\n')
     c += 1
