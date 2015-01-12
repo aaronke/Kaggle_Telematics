@@ -35,13 +35,13 @@ with open(path + '1007','rb') as fp:
 #X = feature1 + feature2[:100] + feature3[:100] + feature4[:100] + feature5[:100] + feature6[:100] + feature7[:100] + feature8[:100] + feature9[:100] + feature10[:100] + feature11[:100]
 #y = [0]*200 + [1]*1000
 X = []
-y = [0]*200 + [1]*800
+y = [0]*200 + [1]*400
 f = 0
 with open(path + files[f], 'rb') as fp:
     X += pickle.load(fp)
-for i in range(1,101):
+for i in range(1,401):
     with open(path + files[f + i], 'rb') as fp:
-        X += pickle.load(fp)[:8]
+        X += pickle.load(fp)[:1]
 X_train = X[:150] + X[250:]
 y_train = y[:150] + y[250:]
 X_test = X[150:250]

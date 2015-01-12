@@ -12,7 +12,7 @@ name = loadmat(path + 'name.mat')
 feature = feature['drivers_features'][:547200]
 name = name['Sort_Names'][0]
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/GBRT_Ke_42_2V3.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/GBRT_Ke_42_2V2.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
@@ -20,12 +20,12 @@ c = 0
 size = 2736
 for k in range(1,size + 1):
     X = feature[200*(k-1):200*(k)]
-    for i in range(1,101):
-        X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + 3)]))
+    for i in range(1,201):
+        X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + 1)]))
     X = Imputer().fit_transform(X)
-    y = np.array([0]*200 + [1]*300)
+    y = np.array([0]*200 + [1]*200)
     #clf = SVC(C=0.0005, kernel='poly', degree=5, gamma=0.0, coef0=0.0, shrinking=True, probability=True)
-    clf = GBRT(n_estimators=250, learning_rate=0.05, max_depth=8, max_features=1.0, min_samples_leaf=17, random_state=0, subsample = 0.5)
+    clf = GBRT(n_estimators=150, learning_rate=0.05, max_depth=7, max_features=1.0, min_samples_leaf=14, random_state=0, subsample = 0.5)
     clf.fit(X, y)
     scores = clf.predict_proba(X[:200])[:,0]
     for i in range(1,201):

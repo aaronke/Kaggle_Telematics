@@ -14,10 +14,10 @@ name = name['Sort_Names'][0]
 
 k = 11 # choose which driver to classify
 X = feature[200*(k-1):200*(k)]
-for i in range(1,301):
-    X = np.concatenate((X, feature[(k-1 + i)%2736*200:((k-1 + i)%2736*200 + 3)]))
+for i in range(1,201):
+    X = np.concatenate((X, feature[(k-1 + i)%2736*200:((k-1 + i)%2736*200 + 1)]))
 
-y = np.array([0]*200 + [1]*900)
+y = np.array([0]*200 + [1]*200)
 
 X = Imputer().fit_transform(X)
 
@@ -27,8 +27,8 @@ X_test = X[150:250]
 y_test = y[150:250]
 
 #clf = RandomForest(n_estimators=250, max_features=4, max_depth=None, min_samples_split=1)
-clf = SVC(C=0.0005, kernel='poly', degree=5, gamma=0.0, coef0=0.0, shrinking=True, probability=True)
-#clf = GBRT(n_estimators=250, learning_rate=0.05, max_depth=8, max_features=1.0, min_samples_leaf=17,  random_state=0, subsample=0.5)
+#clf = SVC(C=0.0005, kernel='poly', degree=5, gamma=0.0, coef0=0.0, shrinking=True, probability=True)
+clf = GBRT(n_estimators=150, learning_rate=0.05, max_depth=7, max_features=1.0, min_samples_leaf=13,  random_state=0, subsample=0.5)
 #clf = GBRT(n_estimators=250, learning_rate=0.1, max_depth=4, max_features=0.3, min_samples_leaf=3,  random_state=0, subsample=0.6)
 #clf = Pipeline([("scale", StandardScaler()), ("gbrt", GBRT(n_estimators=250, learning_rate=0.1, max_depth=4, max_features=0.3, min_samples_leaf=3,  random_state=0, subsample=0.6))])
 
