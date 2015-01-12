@@ -5,6 +5,7 @@ import numpy as np
 from scipy.io import loadmat
 from sklearn.preprocessing import Imputer
 from sklearn.svm import SVC
+import cPickle as pickle
 
 path = '/cshome/kzhou3/Data/feature/featureK/'
 feature = loadmat(path + 'feature.mat')
