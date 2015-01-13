@@ -1,19 +1,21 @@
 import os
 import time
 from sklearn.ensemble import GradientBoostingClassifier as GBRT
+from sklearn.ensemble import RandomForestClassifier as RandomForest
 import numpy as np
 from scipy.io import loadmat
 from sklearn.covariance import EmpiricalCovariance
 from sklearn.preprocessing import Imputer
 from sklearn import cross_validation as CV
+import cPickle as pickle
 
-path = '/cshome/kzhou3/Data/feature/featureK/'
-feature = loadmat(path + 'feature.mat')
-name = loadmat(path + 'name.mat')
-feature = feature['drivers_features'][:547200]
-name = name['Sort_Names'][0]
+path = '/cshome/kzhou3/Data/feature/feature61/'
+with open(path + 'feature61','rb') as fp:
+    feature = pickle.load(fp)
+with open(path + 'name','rb') as fp:
+    name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/GBRT_Ke_42_twoRound.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF_61_twoRound.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
@@ -39,12 +41,12 @@ for k in range(1,size + 1):
             X_new.append(X[i])
     # Round 2: train the rest
     X = np.array(X_new[:140])
-    for i in range(1,301):
-        X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + 3)]))
+    for i in range(1,201):
+        X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + 1)]))
     X = Imputer().fit_transform(X)
-    y = np.array([0]*140 + [1]*900)
-
-    clf = GBRT(n_estimators=250, learning_rate=0.05, max_depth=8, max_features=1.0, min_samples_leaf=17, random_state=0, subsample = 0.5)
+    y = np.array([0]*140 + [1]*200)
+    clf = RandomForest(n_estimators=250, max_features=8, max_depth=None, min_samples_split=1)
+    #clf = GBRT(n_estimators=250, learning_rate=0.05, max_depth=8, max_features=1.0, min_samples_leaf=17, random_state=0, subsample = 0.5)
     clf.fit(X, y)
     scores = clf.predict_proba(X_predict)[:,0]
     #print sum(clf.predict(X_predict))

@@ -7,8 +7,8 @@ path = '/cshome/kzhou3/Data/feature/featureK/'
 name = loadmat(path + 'name.mat')
 name = name['Sort_Names'][0]
 """
-f1 = open('./submission/19Feat_100class.csv', 'r')
-f2 = open('./submission/19Feat_100class_calib_label.csv', 'w')
+f1 = open('./submission/RF_61_2V2.csv', 'r')
+f2 = open('./submission/RF_61_2V2_calib.csv', 'w')
 f1.readline()
 f2.write('driver_trip,prob\n')
 # 2737
