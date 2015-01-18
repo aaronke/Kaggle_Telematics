@@ -1,0 +1,58 @@
+#!/usr/bin/python
+import sys
+import numpy as np
+# append the path to xgboost, you may need to change the following line
+# alternatively, you can add the path to PYTHONPATH environment variable
+sys.path.append('/cshome/kzhou3/xgboost/wrapper')
+import xgboost as xgb
+import cPickle as pickle
+from sklearn.preprocessing import Imputer
+
+path = '/cshome/kzhou3/Data/feature/feature61/'
+with open(path + 'feature61','rb') as fp:
+    feature = pickle.load(fp)
+with open(path + 'name','rb') as fp:
+    name = pickle.load(fp)
+
+k = 153 # choose which driver to classify
+X = feature[200*(k-1):200*(k)]
+for i in range(1,201):
+    X = np.concatenate((X, feature[(k-1 + i)%2736*200:((k-1 + i)%2736*200 + 1)]))
+
+y = np.array([1.0]*200 + [0.0]*200)
+
+X = Imputer().fit_transform(X)
+
+print ('loading numpy feature end')
+
+############ xgboost ##############
+# construct xgboost.DMatrix from numpy array, treat -999.0 as missing value
+xgmat = xgb.DMatrix(X, label=y)
+
+# setup parameters for xgboost
+param = {}
+# use logistic regression loss, use raw prediction before logistic transformation
+# since we only need the rank
+# scale weight of positive examples
+#param['scale_pos_weight'] = sum_wneg/sum_wpos
+param['bst:eta'] = 0.05
+param['bst:subsample'] = 0.5
+param['eval_metric'] = 'auc'
+param['silent'] = 1
+param['bst:min_child_weight'] = 15
+param['bst:max_depth'] = 5
+param['bst:gamma']=10
+param['objective']='binary:logistic'
+
+def fpreproc(dtrain, dtest, param):
+    label = dtrain.get_label()
+    return (dtrain, dtest, param)
+
+# boost 120 trees
+num_round = 500
+# you can directly throw param in, though we want to watch multiple metrics here 
+
+watchlist = [ (xgmat,'train') ]
+print ('loading data end, start to boost trees')
+bst = xgb.train( param, xgmat, num_round, watchlist )
+xgb.cv(param, xgmat, num_round, nfold=5, metrics={'error','auc'}, seed = 0, fpreproc = fpreproc)
