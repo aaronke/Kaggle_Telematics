@@ -1,10 +1,10 @@
 import cPickle as pickle
 from sklearn import cross_validation as CV
-from sklearn.metrics import roc_auc_score as ROC
-from sklearn.ensemble import GradientBoostingClassifier as GBRT
+from sklearn.ensemble import RandomForestClassifier as RandomForest
 import numpy as np
 import os
 from sklearn.grid_search import GridSearchCV
+from sklearn.preprocessing import Imputer
 
 param_grid = {'max_depth': [None, 4, 5, 6, 7, 8],
               'min_samples_leaf': [1, 2, 3, 5, 9],
