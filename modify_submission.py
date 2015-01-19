@@ -1,8 +1,8 @@
 import numpy as np
 
-f1 = open('./submission/19Feat_100class.csv', 'r')
-f2 = open('./submission/19Feat_100class.csv', 'r')
-f3 = open('./submission/R_19Feat_100class_M.csv', 'w')
+f1 = open('./submission/XGBoost_61_2V32.csv', 'r')
+f2 = open('./submission/XGBoost_61_2V32.csv', 'r')
+f3 = open('./submission/XGBoost_61_2V32__M.csv', 'w')
 f1.readline()
 f2.readline()
 f3.write('driver_trip,prob\n')

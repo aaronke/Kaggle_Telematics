@@ -14,19 +14,15 @@ with open(path + 'feature61','rb') as fp:
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-k = 1 # choose which driver to classify
+size = 2736
+k = 147 # choose which driver to classify
 X = feature[200*(k-1):200*(k)]
 neg = 800
-neg_step = 4
-for i in range(1,neg + 1):
-    X = np.concatenate((X, feature[(k-1 + i)%2736*200:((k-1 + i)%2736*200 + neg_step)]))
+neg_step = 1
+X = np.concatenate((X, np.array([feature[(k + i)%size*200 + j] for i in range(0, neg) for j in range(0, neg_step)])))
 X = Imputer().fit_transform(X)
 y = np.array([1.0]*200 + [0.0]*neg*neg_step)
 weight = np.array([2.0]*200 + [1.0]*(len(y)-200))
-
-
-print ('loading numpy feature end')
-
 ############ xgboost ##############
 # construct xgboost.DMatrix from numpy array, treat -999.0 as missing value
 xgmat = xgb.DMatrix(X, label=y)
@@ -36,7 +32,7 @@ sum_wneg = sum( weight[i] for i in range(len(y)) if y[i] == 0.0  )
 # use logistic regression loss, use raw prediction before logistic transformation
 # since we only need the rank
 # scale weight of positive examples
-param = {'objective':'binary:logistic', 'eval_metric':'auc', 'scale_pos_weight':sum_wneg/sum_wpos, 'max_depth':6, 'eta':0.01, 'silent':1,'bst:min_child_weight':20,'bst:gamma':10,'bst:subsample':0.5}
+param = {'objective':'binary:logistic', 'eval_metric':'error', 'scale_pos_weight':sum_wneg/sum_wpos, 'max_depth':6, 'eta':0.05, 'silent':1,'bst:min_child_weight':15,'bst:gamma':7,'bst:subsample':0.5}
 #param = {'objective':'binary:logistic', 'max_depth':5, 'eta':0.05, 'silent':1,'bst:min_child_weight':5,'bst:gamma':3,'bst:subsample':0.5}
 
 def fpreproc(dtrain, dtest, param):
@@ -44,10 +40,9 @@ def fpreproc(dtrain, dtest, param):
     return (dtrain, dtest, param)
 
 # boost 120 trees
-num_round = 600
+num_round = 100
 # you can directly throw param in, though we want to watch multiple metrics here 
 
-watchlist = [ (xgmat,'train') ]
 print ('loading data end, start to boost trees')
-bst = xgb.train( param, xgmat, num_round, watchlist )
+bst = xgb.train( param, xgmat, num_round)
 xgb.cv(param, xgmat, num_round, nfold=5, metrics={'error','auc'}, seed = 0, fpreproc = fpreproc)

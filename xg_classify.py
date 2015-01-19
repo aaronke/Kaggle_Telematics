@@ -17,16 +17,15 @@ with open(path + 'feature61','rb') as fp:
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/XGBoost_61_2V32.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/XGBoost_61_2V8.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
 c = 0
 size = 2736
 neg = 800
-neg_step = 4
+neg_step = 1
 for k in range(1,size + 1):
-
     X = feature[200*(k-1):200*(k)]
     for i in range(1,neg + 1):
         X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + neg_step)]))
@@ -38,9 +37,10 @@ for k in range(1,size + 1):
     sum_wpos = sum( weight[i] for i in range(len(y)) if y[i] == 1.0  )
     sum_wneg = sum( weight[i] for i in range(len(y)) if y[i] == 0.0  )
     # xgboosting param
-    #param = {'objective':'binary:logistic', 'max_depth':5, 'eta':0.05, 'silent':1,'bst:min_child_weight':5,'bst:gamma':3,'bst:subsample':0.5}
-    param = {'objective':'binary:logistic', 'eval_metric':'auc', 'scale_pos_weight':sum_wneg/sum_wpos, 'max_depth':6, 'eta':0.01, 'silent':1,'bst:min_child_weight':20,'bst:gamma':10,'bst:subsample':0.5}
-    num_round = 600
+    #param = {'objective':'binary:logistic', 'max_depth':5, 'eta':0.05, 'silent':1,'bst:min_child_weight':5,'bst:gamma':3,'bst:subsample':0.5} # 0.78
+    #param = {'objective':'binary:logistic', 'eval_metric':'auc', 'scale_pos_weight':sum_wneg/sum_wpos, 'max_depth':6, 'eta':0.01, 'silent':1,'bst:min_child_weight':20,'bst:gamma':10,'bst:subsample':0.5} # 0.76
+    param = {'objective':'binary:logistic', 'eval_metric':'error', 'scale_pos_weight':sum_wneg/sum_wpos, 'max_depth':4, 'eta':0.01, 'silent':1,'bst:min_child_weight':10,'bst:gamma':5,'bst:subsample':0.5}
+    num_round = 100
     watchlist = [(xgmat,'eval'),(xgmat,'train')]
     bst = xgb.train( param, xgmat, num_round, watchlist )
     scores = bst.predict(xgmat)[:200]
