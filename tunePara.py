@@ -6,41 +6,25 @@ import numpy as np
 import os
 from sklearn.grid_search import GridSearchCV
 
-param_grid = {'learning_rate': [0.2, 0.1, 0.05, 0.02, 0.01],
-              'max_depth': [4, 5, 6],
-              'min_samples_leaf': [1, 3, 5, 9, 17],
-              'max_features': [1.0, 0.3, 0.1],
-              'subsample': [0.4, 0.5, 0.6]
+param_grid = {'max_depth': [None, 4, 5, 6, 7, 8],
+              'min_samples_leaf': [1, 2, 3, 5, 9],
+              'max_features': [0.8, 0.5, 0.3, 0.1, "auto", "log2"],
               }
 
-path = '/cshome/kzhou3/Data/feature/feature3nor/'
-files = sorted(os.listdir(path))
-for ii in range(1,11):
+path = '/cshome/kzhou3/Data/feature/feature61/'
+with open(path + 'feature61','rb') as fp:
+    feature = pickle.load(fp)
+with open(path + 'name','rb') as fp:
+    name = pickle.load(fp)
+for k in range(1,11):
     print "\n-------------------------------------------------------\n"
-    X = []
-    y = [0]*200 + [1]*200
-    f = ii
-    with open(path + files[f], 'rb') as fp:
-        X += pickle.load(fp)
-    for i in range(1,101):
-        with open(path + files[f + i], 'rb') as fp:
-            X += pickle.load(fp)[:2]
-    
-    X_train = X[:150] + X[250:]
-    y_train = y[:150] + y[250:]
-    X_test = X[150:250]
-    y_test = y[150:250]
-    X = np.array(X)
-    n_elements = X.shape[0]
-    y = np.array(y)
-    c = np.c_[X.reshape(len(X), -1), y.reshape(len(y), -1)]
-    np.random.shuffle(c)
-    X = c[:, :X.size//len(X)].reshape(X.shape)
-    y = c[:, X.size//len(X):].reshape(y.shape)
-    
-#    clf = GBRT(n_estimators=250, learning_rate=0.1, max_depth=5, random_state=0, subsample=0.5)
-    clf = GBRT(n_estimators=250)
-    gs_cv = GridSearchCV(clf, param_grid, n_jobs=4).fit(X, y)
+    X = feature[200*(k-1):200*(k)]
+    for i in range(1,201):
+        X = np.concatenate((X, feature[(k-1 + i)%2736*200:((k-1 + i)%2736*200 + 1)]))
+    y = np.array([0]*200 + [1]*200)
+    X = Imputer().fit_transform(X)
+    clf = RandomForest(n_estimators=250)
+    gs_cv = GridSearchCV(clf, param_grid, n_jobs=6).fit(X, y)
     print gs_cv.best_params_
     """
     kf = CV.KFold(n_elements, n_folds = 5, indices = False)

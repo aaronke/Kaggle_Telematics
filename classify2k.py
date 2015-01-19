@@ -12,7 +12,7 @@ with open(path + 'feature61','rb') as fp:
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF_61_2V2.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF_61_2V2_test.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
