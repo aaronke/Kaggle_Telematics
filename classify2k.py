@@ -12,7 +12,7 @@ with open(path + 'feature61','rb') as fp:
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF_61_2V2_test.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF_61_2V2_maxfeat05.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
@@ -25,7 +25,7 @@ for k in range(1,size + 1):
     X = Imputer().fit_transform(X)
     y = np.array([0]*200 + [1]*200)
     #clf = SVC(C=0.0005, kernel='poly', degree=5, gamma=0.0, coef0=0.0, shrinking=True, probability=True)
-    clf = RandomForest(n_estimators=250, max_features=8, max_depth=None, min_samples_split=1)
+    clf = RandomForest(n_estimators=250, max_features=0.5, max_depth=None, min_samples_split=1, n_jobs=6)
     #clf = GBRT(n_estimators=250, learning_rate=0.05, max_depth=8, max_features=1.0, min_samples_leaf=17, random_state=0, subsample = 0.5)
     clf.fit(X, y)
     scores = clf.predict_proba(X[:200])[:,0]
