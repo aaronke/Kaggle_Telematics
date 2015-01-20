@@ -9,25 +9,30 @@ import cPickle as pickle
 path = '/cshome/kzhou3/Data/feature/feature61/'
 with open(path + 'feature61','rb') as fp:
     feature = pickle.load(fp)
+with open(path + 'feature61_sort','rb') as fp:
+    feature_sort = pickle.load(fp)
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF_61_2V2_maxfeat05.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF_61sort_18V20.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
 c = 0
 size = 2736
 for k in range(1,size + 1):
-    X = feature[200*(k-1):200*(k)]
+    X = feature_sort[200*(k-1)+20:200*(k)]
     for i in range(1,201):
-        X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + 1)]))
+        X = np.concatenate((X, feature_sort[(k-1 + i)%size*200:((k-1 + i)%size*200 + 1)]))
     X = Imputer().fit_transform(X)
-    y = np.array([0]*200 + [1]*200)
+    y = np.array([0]*180 + [1]*200)
     #clf = SVC(C=0.0005, kernel='poly', degree=5, gamma=0.0, coef0=0.0, shrinking=True, probability=True)
-    clf = RandomForest(n_estimators=250, max_features=0.5, max_depth=None, min_samples_split=1, n_jobs=6)
+    clf = RandomForest(n_estimators=250, max_features=8, max_depth=None, min_samples_split=1)
     #clf = GBRT(n_estimators=250, learning_rate=0.05, max_depth=8, max_features=1.0, min_samples_leaf=17, random_state=0, subsample = 0.5)
     clf.fit(X, y)
+    # ======== Predict ===============
+    X = feature[200*(k-1):200*(k)]
+    X = Imputer().fit_transform(X)
     scores = clf.predict_proba(X[:200])[:,0]
     for i in range(1,201):
         output.write(str(name[k - 1]) + '_' + str(i) + ',' + str(scores[i - 1]) + '\n')
