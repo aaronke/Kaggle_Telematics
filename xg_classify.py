@@ -19,14 +19,14 @@ with open(path + 'feature61_sort','rb') as fp:
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/XG_sortedFeature_2V5.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/XG_sortedFeature_2V8.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
 c = 0
 size = 2736
-neg = 500
-neg_step = 1
+neg = 4
+neg_step = 200
 for k in range(1,size + 1):
     X = feature_sort[200*(k-1):200*(k)]
     for i in range(1,neg + 1):

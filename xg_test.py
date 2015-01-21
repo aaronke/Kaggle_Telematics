@@ -9,17 +9,15 @@ import cPickle as pickle
 from sklearn.preprocessing import Imputer
 
 path = '/cshome/kzhou3/Data/feature/feature61/'
-with open(path + 'feature61_sort','rb') as fp:
+with open(path + 'feature61','rb') as fp:
     feature = pickle.load(fp)
-with open(path + 'name','rb') as fp:
-    name = pickle.load(fp)
 def fpreproc(dtrain, dtest, param):
     label = dtrain.get_label()
     return (dtrain, dtest, param)
 
 size = 2736
-neg = 500
-neg_step = 1
+neg = 1
+neg_step = 200
 for k in range(1,size + 1):
     X = feature[200*(k-1):200*(k)]
     for i in range(1,neg + 1):
@@ -27,6 +25,7 @@ for k in range(1,size + 1):
     X = Imputer().fit_transform(X)
     y = np.array([1.0]*200 + [0.0]*neg*neg_step)
     weight = np.array([2.0]*100 + [3.0]*100 + [1.0]*(len(y)-200))
+    weight = np.array([1.0]*200 + [1.0]*(len(y)-200))
     # construct xgboost.DMatrix from numpy array, treat -999.0 as missing value
     xgmat = xgb.DMatrix(X, label=y)
     sum_wpos = sum( weight[i] for i in range(len(y)) if y[i] == 1.0  )

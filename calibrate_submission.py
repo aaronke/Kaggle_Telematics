@@ -8,7 +8,7 @@ name = loadmat(path + 'name.mat')
 name = name['Sort_Names'][0]
 """
 f1 = open('./ensemble/ensemble52.csv', 'r')
-f2 = open('./ensemble/ensemble52_calib.csv', 'w')
+f2 = open('./ensemble/ensemble52_calib_nosort.csv', 'w')
 f1.readline()
 f2.write('driver_trip,prob\n')
 # 2737
