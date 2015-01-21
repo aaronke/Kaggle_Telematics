@@ -1,29 +1,26 @@
 import os
 import time
-from sklearn.ensemble import GradientBoostingClassifier as GBRT
 from sklearn.ensemble import RandomForestClassifier as RandomForest
-import numpy as np
 from sklearn.preprocessing import Imputer
+import numpy as np
 import cPickle as pickle
 
 path = '/cshome/kzhou3/Data/feature/feature61/'
 with open(path + 'feature61','rb') as fp:
     feature = pickle.load(fp)
-with open(path + 'feature61_sort','rb') as fp:
-    feature_sort = pickle.load(fp)
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF_61sort_18V20.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF_61.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
 c = 0
 size = 2736
 for k in range(1,size + 1):
-    X = feature_sort[200*(k-1)+20:200*(k)]
+    X = feature[200*(k-1)+20:200*(k)]
     for i in range(1,201):
-        X = np.concatenate((X, feature_sort[(k-1 + i)%size*200:((k-1 + i)%size*200 + 1)]))
+        X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + 1)]))
     X = Imputer().fit_transform(X)
     y = np.array([0]*180 + [1]*200)
     #clf = SVC(C=0.0005, kernel='poly', degree=5, gamma=0.0, coef0=0.0, shrinking=True, probability=True)
