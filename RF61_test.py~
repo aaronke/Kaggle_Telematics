@@ -22,7 +22,7 @@ for k in range(1,size + 1):
         X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + 200)]))
     X = Imputer().fit_transform(X)
     y = np.array([0]*160 + [1]*200)
-    clf = RandomForest(n_estimators=150, max_features=5, max_depth=None, min_samples_split=1)
+    clf = RandomForest(n_estimators=250, max_features=0.2, max_depth=5, min_samples_split=2)
     #clf = GBRT(n_estimators=100, learning_rate=0.05, max_depth=4, max_features=5, min_samples_leaf=3, random_state=0, subsample = 0.5)
     scores = CV.cross_val_score(clf, X, y, cv=5)
     print "All test accuracy: " + str(scores)
