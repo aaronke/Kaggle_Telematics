@@ -9,14 +9,14 @@ from scipy.io import loadmat
 from sklearn.preprocessing import Imputer
 
 path = '/cshome/kzhou3/Data/feature/featureK/'
-feature = loadmat(path + 'feature.mat')
+feature = loadmat(path + 'feature_56.mat')
 name = loadmat(path + 'name.mat')
 feature = feature['drivers_features'][:547200]
 name = name['Sort_Names'][0]
 
 directory = '/cshome/kzhou3/Data/feature/feature3/'
 files = sorted(os.listdir(directory))
-fff = np.array([[0]*61])
+fff = np.array([[0]*75])
 
 start = time.time()
 c = 0
@@ -32,8 +32,8 @@ for k in range(0,2736):
 end = time.time()
 fff = fff[1:]
 kkk = name
-with open('/cshome/kzhou3/Data/feature/feature61/feature61','wb') as fp:
+with open('/cshome/kzhou3/Data/feature/feature75/feature75','wb') as fp:
     pickle.dump(fff,fp)
-with open('/cshome/kzhou3/Data/feature/feature61/name','wb') as fp:
+with open('/cshome/kzhou3/Data/feature/feature75/name','wb') as fp:
     pickle.dump(kkk,fp)
 print "=====Total time: " + str((end - start)/60) + " minutes ======"
