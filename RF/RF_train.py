@@ -12,7 +12,7 @@ with open(path + featureToUse,'rb') as fp:
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF75/75feat_200V200_1.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF75/75feat_more_esmit_200V200_1.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
@@ -24,7 +24,9 @@ for k in range(1,size + 1):
         X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + 1)]))
     X = Imputer().fit_transform(X)
     y = np.array([0]*200 + [1]*200)
-    clf = RandomForest(n_estimators=250, max_features=0.2, max_depth=5, min_samples_split=2)
+    # clf = RandomForest(n_estimators=250, max_features=0.2, max_depth=5, min_samples_split=2) # 0.837
+    clf = RandomForest(n_estimators=450, max_features=0.25, max_depth=5, min_samples_split=2)
+    #clf = RandomForest(n_estimators=250, max_features=8, max_depth=None, min_samples_split=1)
     clf.fit(X, y)
     # ======== Predict ===============
     X = feature[200*(k-1):200*(k)]

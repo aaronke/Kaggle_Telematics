@@ -7,7 +7,7 @@ from sklearn import cross_validation as CV
 
 featureToUse = 'feature75'
 path = '/cshome/kzhou3/Data/feature/' + featureToUse + '/'
-with open(path + featureToUse,'rb') as fp:
+with open(path + 'feature75' + '_sort','rb') as fp:
     feature = pickle.load(fp)
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
@@ -16,11 +16,12 @@ c = 0
 size = 2736
 all_ave = []
 for k in range(1,size + 1):
-    X = feature[200*(k-1):200*(k)]
-    for i in range(1,201):
+    top_offset = 20
+    X = feature[200*(k-1)+top_offset:200*(k)]
+    for i in range(1,201-top_offset):
         X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + 1)]))
     X = Imputer().fit_transform(X)
-    y = np.array([0]*200 + [1]*200)
+    y = np.array([0]*(200-top_offset) + [1]*(200-top_offset))
     clf = RandomForest(n_estimators=250, max_features=0.2, max_depth=5, min_samples_split=2)
     scores = CV.cross_val_score(clf, X, y, cv=5)
     print "aveage cv score for this driver " + str(np.mean(np.array(scores)))
