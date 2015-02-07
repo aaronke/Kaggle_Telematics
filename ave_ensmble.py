@@ -1,11 +1,11 @@
 import numpy as np
 
 f1 = open('./ensemble/ensemble52.csv', 'r')
-f2 = open('./ensemble/RF_61_2V2.csv', 'r')
-f3 = open('./ensemble/ensemble5.csv', 'r')
+f2 = open('./ensemble/2V2_550estimator_std.csv', 'r')
+f3 = open('./ensemble/2V25_550estimator_std.csv', 'r')
 f4 = open('./ensemble/ensemble52_calib.csv', 'r')
 f5 = open('./ensemble/RF_2v2_sorted.csv', 'r')
-f6 = open('./ensemble/ensemble2.csv', 'w')
+f6 = open('./ensemble/ensemble75.csv', 'w')
 f1.readline()
 f2.readline()
 f3.readline()
@@ -20,7 +20,7 @@ for line in f1:
     c=float(f3.readline().split(',')[1])
     d=float(f4.readline().split(',')[1])
     e=float(f5.readline().split(',')[1])
-    f6.write(line[0] + ',' + str((a+e)/2.0) + '\n')
+    f6.write(line[0] + ',' + str((a+b+c)/3.0) + '\n')
 f1.close()
 f2.close()
 f3.close()
