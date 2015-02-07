@@ -12,19 +12,19 @@ with open(path + featureToUse,'rb') as fp:
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF75/2V2_550estimator_std.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF75/4V4_550estimator_std.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
 c = 0
 size = 2736
-neg = 200
+neg = 400
 for k in range(1,size + 1):
-    X = feature[200*(k-1):200*(k)]
+    X = feature[200*(k-1):200*(k+1)]
     for i in range(1,neg + 1):
-        X = np.concatenate((X, feature[(k-1 + i)%size*200:((k-1 + i)%size*200 + 1)]))
+        X = np.concatenate((X, feature[(k + i)%size*200:((k + i)%size*200 + 1)]))
     X = Imputer().fit_transform(X)
-    y = np.array([0]*200 + [1]*neg)
+    y = np.array([0]*400 + [1]*neg)
     # clf = RandomForest(n_estimators=250, max_features=0.2, max_depth=5, min_samples_split=2) # 0.837
     # clf = RandomForest(n_estimators=450, max_features=0.25, max_depth=5, min_samples_split=2)
     clf = RandomForest(n_estimators=550, max_features=8, max_depth=None, min_samples_split=1)
