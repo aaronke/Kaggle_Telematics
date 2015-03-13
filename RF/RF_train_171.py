@@ -32,9 +32,9 @@ for k in range(1,size + 1):
         X = np.concatenate((X, feature[(k -1 + i)%size*200:((k -1 + i)%size*200 + 1)]))
     X = Imputer().fit_transform(X)
     y = np.array([0]*200 + [1]*neg)
-    #clf = RandomForest(n_estimators=550, max_features=8, max_depth=None, min_samples_split=1)
-    #clf = RandomForest(n_estimators=1888, max_depth=None, min_samples_split=1)
-    clf = RandomForest(n_estimators=1888, max_features=8, max_depth=None, min_samples_split=1)
+    #clf = RandomForest(n_estimators=550, max_features=8, max_depth=None, min_samples_split=1) # 0.90080
+    clf = RandomForest(n_estimators=1888, max_depth=None, min_samples_split=1) # 0.90464
+    #clf = RandomForest(n_estimators=1888, max_features=8, max_depth=None, min_samples_split=1) # 0.90369
     clf.fit(X, y)
     # ======== Predict ===============
     X = feature[200*(k-1):200*(k)]
