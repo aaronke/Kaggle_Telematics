@@ -6,10 +6,17 @@ from sklearn.preprocessing import Imputer
 import cPickle as pickle
 from sklearn import cross_validation as CV
 
-featureToUse = 'feature75'
+featureToUse = 'feature171'
 path = '/cshome/kzhou3/Data/feature/' + featureToUse + '/'
-with open(path + featureToUse,'rb') as fp:
-    feature = pickle.load(fp)
+with open(path + featureToUse + '_1','rb') as fp:
+    f1 = np.array(pickle.load(fp))
+with open(path + featureToUse + '_2','rb') as fp:
+    f2 = np.array(pickle.load(fp))
+with open(path + featureToUse + '_3','rb') as fp:
+    f3 = np.array(pickle.load(fp))
+with open(path + featureToUse + '_4','rb') as fp:
+    f4 = np.array(pickle.load(fp))
+feature = np.concatenate((f1,f2,f3,f4))
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
@@ -19,13 +26,14 @@ all_ave = []
 all_pred = []
 neg = 200
 for k in range(1,size + 1):
-    X = feature[200*(k-1):200*K]
+    X = feature[200*(k-1):200*k]
     for i in range(1,neg+1):
-        X = np.concatenate((X, feature[(k - 1 + i)%size*200:((k - 1 + i)%size*200 + 1)]))
+        X = np.concatenate((X, feature[(k -1 + i)%size*200:((k -1 + i)%size*200 + 1)]))
     X = Imputer().fit_transform(X)
     y = np.array([0]*200 + [1]*neg)
     # clf = RandomForest(n_estimators=250, max_features=0.2, max_depth=5, min_samples_split=2) # 0.837
-    clf = RandomForest(n_estimators=550, max_features=8, max_depth=None, min_samples_split=1)
+    #clf = RandomForest(n_estimators=1000, max_features=13, max_depth=None, min_samples_split=1)
+    clf = RandomForest(n_estimators=1000, max_features=8, max_depth=None, min_samples_split=1)
     # clf = GBRT(n_estimators=250, learning_rate=0.1, max_depth=4, max_features=0.2, min_samples_leaf=3, random_state=0, subsample = 0.6)
     scores = CV.cross_val_score(clf, X, y, cv=5)
     print "aveage cv score for this driver " + str(np.mean(np.array(scores)))
