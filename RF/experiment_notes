@@ -19,3 +19,6 @@
 
 75_2V2 more estimator & standard --> 2V2_550estimator_std.csv: (n_estimators=550, max_features=8, max_depth=None, min_samples_split=1)
 0.89282
+
+171_2V2_1888_auto:(clf = RandomForest(n_estimators=1888, max_depth=None, min_samples_split=1))
+0.90464
