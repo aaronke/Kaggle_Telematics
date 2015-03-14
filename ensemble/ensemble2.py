@@ -1,0 +1,15 @@
+f1 = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF171/134_new_RF1888auto.csv', 'r')
+f2 = open('./2V2_1888_estimator_autofeat.csv', 'r')
+f3 = open('./ensemble171_134.csv', 'w')
+f1.readline()
+f2.readline()
+f3.write('driver_trip,prob\n')
+
+for line in f1:
+    line = line.split(',')
+    a=float(line[1])
+    b=float(f2.readline().split(',')[1])
+    f3.write(line[0] + ',' + str((a+b)/2.0) + '\n')
+f1.close()
+f2.close()
+f3.close()

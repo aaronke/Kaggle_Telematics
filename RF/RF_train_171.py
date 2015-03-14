@@ -7,7 +7,7 @@ from sklearn.preprocessing import Imputer
 import numpy as np
 import cPickle as pickle
 
-featureToUse = 'feature171'
+featureToUse = 'feature134'
 path = '/cshome/kzhou3/Data/feature/' + featureToUse + '/'
 with open(path + featureToUse + '_1','rb') as fp:
     f1 = np.array(pickle.load(fp))
@@ -22,7 +22,7 @@ feature = np.concatenate((f1,f2,f3,f4))
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF171/171_LR.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/RF171/134_new_RF1888auto.csv', 'w')
 output.write('driver_trip,prob\n')
 
 start = time.time()
@@ -36,7 +36,7 @@ for k in range(1,size + 1):
     X = Imputer().fit_transform(X)
     y = np.array([0]*200 + [1]*neg)
     #clf = RandomForest(n_estimators=550, max_features=8, max_depth=None, min_samples_split=1) # 0.90080
-    #clf = RandomForest(n_estimators=1888, max_depth=None, min_samples_split=1) # 0.90464
+    clf = RandomForest(n_estimators=1888, max_depth=None, min_samples_split=1) # 0.90464
     #clf = RandomForest(n_estimators=1888, max_features=8, max_depth=None, min_samples_split=1) # 0.90369
     #clf = GBRT(n_estimators=350, learning_rate=0.08, max_depth=6, max_features="auto", min_samples_leaf=5, random_state=0, subsample = 0.5)
     #clf = LR(penalty='l2', dual=False, C=0.8, fit_intercept=True, intercept_scaling=1, random_state=None) # 0.80534

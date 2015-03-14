@@ -8,7 +8,7 @@ f5 = open('./ensemble/7_to_1/84425.csv', 'r') # my 19 feature, 1v100 class
 f6 = open('./ensemble/7_to_1/80534.csv', 'r') # 171 feature, pure LR testing
 f7 = open('./ensemble/7_to_1/87188_cal.csv', 'r') # GBRT, 171, 550 est, calibrated
 
-f8 = open('./ensemble/7_to_1/the_1_from_7.csv', 'w')
+f8 = open('./ensemble/7_to_1/the_1_from_4.csv', 'w')
 
 f1.readline()
 f2.readline()
@@ -28,7 +28,7 @@ for line in f1:
     e=float(f5.readline().split(',')[1])
     f=float(f6.readline().split(',')[1])
     g=float(f7.readline().split(',')[1])
-    f8.write(line[0] + ',' + str((a+b+c+d+e+f+g)/7.0) + '\n')
+    f8.write(line[0] + ',' + str((a+b+c+g)/4.0) + '\n')
 
 f1.close()
 f2.close()
