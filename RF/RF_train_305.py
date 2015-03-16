@@ -35,11 +35,15 @@ with open(path + featureToUse + '_4','rb') as fp:
 feature2 = np.concatenate((f1,f2,f3,f4))
 # 305
 feature = np.concatenate((feature1,feature2),axis=1)
-
+#feature = feature[:,:105]
+feature = feature[:,105:205]
+#feature = feature[:,205:]
 with open(path + 'name','rb') as fp:
     name = pickle.load(fp)
 
-output = open('/cshome/kzhou3/Dropbox/Telematics/submission/final/305_ada_GBRT_2000.csv', 'w')
+#output = open('/cshome/kzhou3/Dropbox/Telematics/submission/final/sepa_feat_1.csv', 'w')
+output = open('/cshome/kzhou3/Dropbox/Telematics/submission/final/sepa_feat_2.csv', 'w')
+#output = open('/cshome/kzhou3/Dropbox/Telematics/submission/final/sepa_feat_3.csv', 'w')
 #output = open('/cshome/kzhou3/Dropbox/Telematics/submission/final/305_ada_ET_again.csv', 'w')
 #output = open('/cshome/kzhou3/Dropbox/Telematics/submission/final/305_ET.csv', 'w')
 output.write('driver_trip,prob\n')
@@ -54,13 +58,11 @@ for k in range(1,size + 1):
         X = np.concatenate((X, feature[(k -1 + i)%size*200:((k -1 + i)%size*200 + 1)]))
     X = Imputer().fit_transform(X)
     y = np.array([0]*200 + [1]*neg)
-    clf_base = GBRT(n_estimators=2000, learning_rate=0.05, max_depth=3, max_features="auto", min_samples_leaf=5, random_state=0, subsample = 0.5)
-    #clf_base = RandomForest(n_estimators=2222, max_features=10, max_depth=None, min_samples_split=1) # 0.90694, better than 171!
+    #clf = GBRT(n_estimators=1111, learning_rate=0.08, max_depth=3, max_features="auto", min_samples_leaf=5, random_state=0, subsample = 0.5)
+    clf_base = RandomForest(n_estimators=1666, max_features=10, max_depth=None, min_samples_split=1) # 0.90694, better than 171!
     #clf_base = RandomForest(n_estimators=2222, criterion="entropy",max_features=22, max_depth=None, min_samples_split=1) # 0.90694, better than 171!
     #clf_base = ExtraTrees(n_estimators=1888,  max_depth=None, min_samples_split=1) # 0.90464
     clf = AdaBoost(clf_base, n_estimators=55, learning_rate=0.92)
-
-    #clf = ExtraTrees(n_estimators=55, max_depth=None, min_samples_split=1) # 0.90464
     clf.fit(X, y)
     # ======== Predict ===============
     X = feature[200*(k-1):200*(k)]
